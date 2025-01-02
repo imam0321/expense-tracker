@@ -2,10 +2,28 @@ import React, { useState } from "react";
 import { Navbar } from "../components/Navbar/Navbar";
 import Form from "../components/SubmissionForm/Form";
 import BalanceStat from "../components/RightCoulam/BalanceStat/BalanceStat";
+import ExpenseList from "../components/RightCoulam/ExpenseList/ExpenseList";
+import IncomeList from "../components/RightCoulam/IncomeList/IncomeList";
 
 const Main = () => {
-  const [incomeList, setIncomeList] = useState([]);
-  const [expenseList, setExpenseList] = useState([]);
+  const defaultIncome = [
+    {
+      id: crypto.randomUUID(),
+      category: "Salary",
+      amount: 2000,
+      date: "21-02-2024",
+    },
+  ];
+  const defaultExpense = [
+    {
+      id: crypto.randomUUID(),
+      category: "Food",
+      amount: 1500,
+      date: "21-02-2024",
+    },
+  ];
+  const [incomeList, setIncomeList] = useState(defaultIncome);
+  const [expenseList, setExpenseList] = useState(defaultExpense);
 
   const addIncome = (newIncome, isAdd) => {
     setIncomeList([...incomeList, newIncome]);
@@ -36,6 +54,10 @@ const Main = () => {
             totalExpense={totalExpense}
             totalBalance={totalBalance}
           />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
+            <IncomeList incomeList={incomeList}/>
+            <ExpenseList expenseList={expenseList} />
+          </div>
         </div>
       </div>
     </>
