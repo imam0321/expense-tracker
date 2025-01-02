@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const Form = () => {
+const Form = ({ addIncome, addExpense }) => {
   const [transactionType, SetTransactionType] = useState("Expense");
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
@@ -41,8 +41,10 @@ const Form = () => {
       date,
     };
 
-    if (transactionType === "Expanse") {
+    if (transactionType === "Expense") {
+      addExpense(newTransaction, isAdd);
     } else {
+      addIncome(newTransaction, isAdd);
     }
 
     console.log(newTransaction);
