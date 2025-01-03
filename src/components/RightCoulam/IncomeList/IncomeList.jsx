@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const IncomeList = ({ incomeList, onEdit }) => {
+const IncomeList = ({ incomeList, onEdit, onDelete }) => {
   const [showDropdown, setShowDropdown] = useState(null);
   const toggleDropdown = (dropdown) => {
     setShowDropdown((prev) => (prev === dropdown ? null : dropdown));
@@ -232,6 +232,7 @@ const IncomeList = ({ incomeList, onEdit }) => {
                   className="hover:text-red-600"
                   role="button"
                   title="Delete"
+                  onClick={()=> onDelete(income.id)}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

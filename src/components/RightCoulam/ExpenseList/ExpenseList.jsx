@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const ExpenseList = ({ expenseList }) => {
+const ExpenseList = ({ expenseList, onEdit, onDelete }) => {
   const [showDropdown, setShowDropdown] = useState(null);
 
   const toggleDropdown = (dropdown) => {
@@ -212,6 +212,7 @@ const ExpenseList = ({ expenseList }) => {
                     className="hover:text-teal-600"
                     role="button"
                     title="Edit Button"
+                    onClick={()=> onEdit(expense)}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -233,6 +234,7 @@ const ExpenseList = ({ expenseList }) => {
                     className="hover:text-red-600"
                     role="button"
                     title="Delete"
+                    onClick={()=> onDelete(expense.id)}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

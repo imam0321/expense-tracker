@@ -11,7 +11,7 @@ const Main = () => {
       id: crypto.randomUUID(),
       category: "Salary",
       amount: 2000,
-      date: "21-02-2024",
+      date: "2025-01-02",
     },
   ];
   const defaultExpense = [
@@ -19,7 +19,7 @@ const Main = () => {
       id: crypto.randomUUID(),
       category: "Food",
       amount: 1500,
-      date: "21-02-2024",
+      date: "2025-01-04",
     },
   ];
   const [incomeList, setIncomeList] = useState(defaultIncome);
@@ -67,30 +67,54 @@ const Main = () => {
 
   // Edit transaction
   const handleEditIncome = (income) => {
-    SetTransactionEdit(income)
+    SetTransactionEdit(income);
     console.log("income");
-  }
+  };
+
   const handleEditExpense = (expense) => {
-    SetTransactionEdit(expense)
+    SetTransactionEdit(expense);
     console.log("exp");
-  }
+  };
+
+  // Delete transaction
+  const handleDeleteIncome = (id) => {
+    const isConfirmed = window.confirm("You are Confirm to Delete Income");
+    isConfirmed &&
+      setIncomeList(incomeList.filter((income) => income.id !== id));
+  };
+
+  const handleDeleteExpense = (id) => {
+    const isConfirmed = window.confirm("You are Confirm to Delete Expense");
+    isConfirmed &&
+      setExpenseList(expenseList.filter((expense) => expense.id !== id));
+  };
 
   return (
     <>
       <Navbar />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mt-4 mx-auto">
-        <Form addIncome={addIncome} addExpense={addExpense} />
+        <Form
+          addIncome={addIncome}
+          addExpense={addExpense}
+          transactionEdit={transactionEdit}
+        />
         <div className="lg:col-span-2">
           <BalanceStat
             totalIncome={totalIncome}
             totalExpense={totalExpense}
             totalBalance={totalBalance}
-            transactionEdit={transactionEdit}
-
           />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
-            <IncomeList incomeList={incomeList} onEdit={handleEditIncome}/>
-            <ExpenseList expenseList={expenseList} onEdit={handleEditExpense}/>
+            <IncomeList
+              incomeList={incomeList}
+              onEdit={handleEditIncome}
+              onDelete={handleDeleteIncome}
+            />
+            <ExpenseList
+              expenseList={expenseList}
+              onEdit={handleEditExpense}
+              onDelete={handleDeleteExpense}
+            />
           </div>
         </div>
       </div>
