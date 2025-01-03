@@ -23,7 +23,7 @@ const Form = ({ addIncome, addExpense, transactionEdit }) => {
     setCategory("");
     setAmount("");
     setDate("");
-    setIsAdd(true)
+    setIsAdd(true);
   };
 
   useEffect(() => {
@@ -61,8 +61,6 @@ const Form = ({ addIncome, addExpense, transactionEdit }) => {
     } else {
       addIncome(newTransaction, isAdd);
     }
-
-    console.log(newTransaction);
     resetForm();
   };
 
