@@ -1,9 +1,39 @@
 import React, { useState } from "react";
 
 const IncomeList = ({ incomeList, onEdit, onDelete }) => {
+  const [sortOrder, setSortOrder] = useState("default");
+  const [filterCategory, setFilterCategory] = useState([]);
   const [showDropdown, setShowDropdown] = useState(null);
+
+  // Toggling sort icon Dropdown
   const toggleDropdown = (dropdown) => {
     setShowDropdown((prev) => (prev === dropdown ? null : dropdown));
+  };
+
+  // Sort by Low to high, High to Low
+  const sortIncomeList = [...incomeList].sort((a, b) => {
+    if (sortOrder === "Low to High") {
+      return a.amount - b.amount;
+    } else if (sortOrder === "High to Low") {
+      return b.amount - a.amount;
+    }
+    return 0;
+  });
+
+  const filterIncomeList = sortIncomeList.filter((income) => {
+    if (filterCategory.length === 0) {
+      return true;
+    } else {
+      return filterCategory.includes(income.category);
+    }
+  });
+
+  const toggleCategoryFilter = (category) => {
+    setFilterCategory((pev) =>
+      pev.includes(category)
+        ? pev.filter((cat) => cat !== category)
+        : [...pev, category]
+    );
   };
 
   return (
@@ -75,15 +105,16 @@ const IncomeList = ({ incomeList, onEdit, onDelete }) => {
                 role="menu"
                 aria-orientation="vertical"
                 aria-labelledby="menu-button"
-                tabindex="-1"
+                tabIndex="-1"
               >
                 <div className="py-1" role="none">
                   <a
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-all"
                     role="menuitem"
-                    tabindex="-1"
+                    tabIndex="-1"
                     id="menu-item-0"
+                    onClick={() => setSortOrder("Low to High")}
                   >
                     Low to High
                   </a>
@@ -91,8 +122,9 @@ const IncomeList = ({ incomeList, onEdit, onDelete }) => {
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-all"
                     role="menuitem"
-                    tabindex="-1"
+                    tabIndex="-1"
                     id="menu-item-0"
+                    onClick={() => setSortOrder("High to Low")}
                   >
                     High to Low
                   </a>
@@ -144,43 +176,24 @@ const IncomeList = ({ incomeList, onEdit, onDelete }) => {
                 role="menu"
                 aria-orientation="vertical"
                 aria-labelledby="filter-button"
-                tabindex="-1"
+                tabIndex="-1"
                 id="filter-dropdown"
               >
                 <div className="py-1" role="none">
-                  <label className="inline-flex items-center px-4 py-2 text-sm text-gray-700">
-                    <input
-                      type="checkbox"
-                      className="form-checkbox h-4 w-4 rounded-md text-gray-600"
-                      id="filter-option-1"
-                    />
-                    <span className="ml-2">Salary</span>
-                  </label>
-                  <label className="inline-flex items-center px-4 py-2 text-sm text-gray-700">
-                    <input
-                      type="checkbox"
-                      className="form-checkbox h-4 w-4 rounded-md text-gray-600"
-                      id="filter-option-2"
-                    />
-                    <span className="ml-2">Outsourcing</span>
-                  </label>
-                  <label className="inline-flex items-center px-4 py-2 text-sm text-gray-700">
-                    <input
-                      type="checkbox"
-                      className="form-checkbox h-4 w-4 rounded-md text-gray-600"
-                      id="filter-option-3"
-                    />
-                    <span className="ml-2">Bond</span>
-                  </label>
-
-                  <label className="inline-flex items-center px-4 py-2 text-sm text-gray-700">
-                    <input
-                      type="checkbox"
-                      className="form-checkbox h-4 w-4 rounded-md text-gray-600"
-                      id="filter-option-3"
-                    />
-                    <span className="ml-2">Dividend</span>
-                  </label>
+                  {["Salary", "Outsourcing", "Bond", "Dividend"].map(
+                    (category) => (
+                      <label key={category} className="inline-flex items-center px-4 py-2 text-sm text-gray-700">
+                        <input
+                          type="checkbox"
+                          checked={filterCategory.includes(category)}
+                          className="form-checkbox h-4 w-4 rounded-md text-gray-600"
+                          id="filter-option-1"
+                          onChange={() => toggleCategoryFilter(category)}
+                        />
+                        <span className="ml-2">{category}</span>
+                      </label>
+                    )
+                  )}
                 </div>
               </div>
             )}
@@ -189,7 +202,7 @@ const IncomeList = ({ incomeList, onEdit, onDelete }) => {
       </div>
 
       <div className="p-4 divide-y">
-        {incomeList.map((income) => (
+        {filterIncomeList.map((income) => (
           <div
             key={income.id}
             className="flex justify-between items-center py-2 relative group cursor-pointer"
@@ -210,7 +223,7 @@ const IncomeList = ({ incomeList, onEdit, onDelete }) => {
                   className="hover:text-teal-600"
                   role="button"
                   title="Edit Button"
-                  onClick={()=> onEdit(income)}
+                  onClick={() => onEdit(income)}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -232,7 +245,7 @@ const IncomeList = ({ incomeList, onEdit, onDelete }) => {
                   className="hover:text-red-600"
                   role="button"
                   title="Delete"
-                  onClick={()=> onDelete(income.id)}
+                  onClick={() => onDelete(income.id)}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -263,4 +276,3 @@ const IncomeList = ({ incomeList, onEdit, onDelete }) => {
 };
 
 export default IncomeList;
-

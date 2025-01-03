@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
 const ExpenseList = ({ expenseList, onEdit, onDelete }) => {
-  const [showDropdown, setShowDropdown] = useState(null);
   const [sortOrder, setSortOrder] = useState("default");
   const [filterCategory, setFilterCategory] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(null);
 
   const toggleDropdown = (dropdown) => {
     setShowDropdown((prev) => (prev === dropdown ? null : dropdown));
