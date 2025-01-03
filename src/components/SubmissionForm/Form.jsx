@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-const Form = ({ addIncome, addExpense }) => {
-  const [transactionType, SetTransactionType] = useState("Expense");
+const Form = ({ addIncome, addExpense, transactionEdit }) => {
+  const [transactionType, setTransactionType] = useState("Expense");
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
@@ -20,22 +20,37 @@ const Form = ({ addIncome, addExpense }) => {
   ];
 
   const resetForm = () => {
-    SetTransactionType("Expense");
     setCategory("");
     setAmount("");
     setDate("");
+    setIsAdd(true)
   };
 
   useEffect(() => {
-    setCategory(
-      transactionType === "Expense" ? expenseCategories[0] : incomeCategories[0]
-    );
-  }, [transactionType]);
+    if (transactionEdit) {
+      const isIncome = incomeCategories.includes(transactionEdit.category);
+      setTransactionType(isIncome ? "Income" : "Expense");
+      setCategory(transactionEdit.category || "");
+      setAmount(transactionEdit.amount || "");
+      setDate(transactionEdit.date || "");
+      setIsAdd(false);
+    } else {
+      // setTransactionType("Expense");
+      setCategory(
+        transactionType === "Expense"
+          ? expenseCategories[0]
+          : incomeCategories[0]
+      );
+      setAmount("");
+      setDate("");
+      setIsAdd(true);
+    }
+  }, [transactionType, transactionEdit]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const newTransaction = {
-      id: crypto.randomUUID(),
+      id: transactionEdit ? transactionEdit.id : crypto.randomUUID(),
       category,
       amount: parseFloat(amount),
       date,
@@ -52,7 +67,7 @@ const Form = ({ addIncome, addExpense }) => {
   };
 
   const handleTransactionTypeChange = (type) => {
-    SetTransactionType(type);
+    setTransactionType(type);
   };
   return (
     <div className="p-6 py-8 bg-[#F9FAFB] border rounded-md">

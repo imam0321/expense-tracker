@@ -24,24 +24,56 @@ const Main = () => {
   ];
   const [incomeList, setIncomeList] = useState(defaultIncome);
   const [expenseList, setExpenseList] = useState(defaultExpense);
+  const [transactionEdit, SetTransactionEdit] = useState(null);
 
   const addIncome = (newIncome, isAdd) => {
-    setIncomeList([...incomeList, newIncome]);
+    if (isAdd) {
+      setIncomeList([...incomeList, newIncome]);
+    } else {
+      setIncomeList(
+        incomeList.map((income) =>
+          income.id === newIncome.id ? newIncome : income
+        )
+      );
+    }
+    SetTransactionEdit(null);
   };
 
   const addExpense = (newExpense, isAdd) => {
-    setExpenseList([...expenseList, newExpense]);
+    if (isAdd) {
+      setExpenseList([...expenseList, newExpense]);
+    } else {
+      setExpenseList(
+        expenseList.map((expense) =>
+          expense.id === newExpense.id ? newExpense : expense
+        )
+      );
+    }
+    SetTransactionEdit(null);
   };
 
+  // calculate amount
   const totalIncome = incomeList.reduce(
     (sum, income) => sum + income.amount,
     0
   );
+
   const totalExpense = expenseList.reduce(
     (sum, expense) => sum + expense.amount,
     0
   );
+
   const totalBalance = totalIncome - totalExpense;
+
+  // Edit transaction
+  const handleEditIncome = (income) => {
+    SetTransactionEdit(income)
+    console.log("income");
+  }
+  const handleEditExpense = (expense) => {
+    SetTransactionEdit(expense)
+    console.log("exp");
+  }
 
   return (
     <>
@@ -53,10 +85,12 @@ const Main = () => {
             totalIncome={totalIncome}
             totalExpense={totalExpense}
             totalBalance={totalBalance}
+            transactionEdit={transactionEdit}
+
           />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
-            <IncomeList incomeList={incomeList}/>
-            <ExpenseList expenseList={expenseList} />
+            <IncomeList incomeList={incomeList} onEdit={handleEditIncome}/>
+            <ExpenseList expenseList={expenseList} onEdit={handleEditExpense}/>
           </div>
         </div>
       </div>

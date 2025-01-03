@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const IncomeList = ({ incomeList }) => {
+const IncomeList = ({ incomeList, onEdit }) => {
   const [showDropdown, setShowDropdown] = useState(null);
   const toggleDropdown = (dropdown) => {
     setShowDropdown((prev) => (prev === dropdown ? null : dropdown));
@@ -31,7 +31,7 @@ const IncomeList = ({ incomeList }) => {
 
           <div>
             <h3 className="text-xl font-semibold leading-7 text-gray-800">
-              Expense
+              Income
             </h3>
           </div>
         </div>
@@ -210,6 +210,7 @@ const IncomeList = ({ incomeList }) => {
                   className="hover:text-teal-600"
                   role="button"
                   title="Edit Button"
+                  onClick={()=> onEdit(income)}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -261,3 +262,4 @@ const IncomeList = ({ incomeList }) => {
 };
 
 export default IncomeList;
+
