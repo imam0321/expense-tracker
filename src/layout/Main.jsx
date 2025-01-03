@@ -68,12 +68,10 @@ const Main = () => {
   // Edit transaction
   const handleEditIncome = (income) => {
     SetTransactionEdit(income);
-    console.log("income");
   };
 
   const handleEditExpense = (expense) => {
     SetTransactionEdit(expense);
-    console.log("exp");
   };
 
   // Delete transaction

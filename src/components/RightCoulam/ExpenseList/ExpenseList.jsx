@@ -2,10 +2,38 @@ import React, { useState } from "react";
 
 const ExpenseList = ({ expenseList, onEdit, onDelete }) => {
   const [showDropdown, setShowDropdown] = useState(null);
+  const [sortOrder, setSortOrder] = useState("default");
+  const [filterCategory, setFilterCategory] = useState([]);
 
   const toggleDropdown = (dropdown) => {
     setShowDropdown((prev) => (prev === dropdown ? null : dropdown));
   };
+
+  const sortExpenseList = [...expenseList].sort((a, b) => {
+    if (sortOrder === "Low to High") {
+      return a.amount - b.amount;
+    } else if (sortOrder === "High to Low") {
+      return b.amount - a.amount;
+    }
+    return 0;
+  });
+
+  const filterExpenseList = sortExpenseList.filter((expense) => {
+    if (filterCategory.length === 0) {
+      return true;
+    } else {
+      return filterCategory.includes(expense.category);
+    }
+  });
+
+  const toggleCategoryFilter = (category) => {
+    setFilterCategory((pev) =>
+      pev.includes(category)
+        ? pev.filter((cat) => cat != category)
+        : [...pev, category]
+    );
+  };
+
   return (
     <>
       <div className="border rounded-md relative">
@@ -77,15 +105,16 @@ const ExpenseList = ({ expenseList, onEdit, onDelete }) => {
                   role="menu"
                   aria-orientation="vertical"
                   aria-labelledby="menu-button"
-                  tabindex="-1"
+                  tabIndex="-1"
                 >
                   <div className="py-1" role="none">
                     <a
                       href="#"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-all"
                       role="menuitem"
-                      tabindex="-1"
+                      tabIndex="-1"
                       id="menu-item-0"
+                      onClick={() => setSortOrder("Low to High")}
                     >
                       Low to High
                     </a>
@@ -93,8 +122,9 @@ const ExpenseList = ({ expenseList, onEdit, onDelete }) => {
                       href="#"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-all"
                       role="menuitem"
-                      tabindex="-1"
+                      tabIndex="-1"
                       id="menu-item-0"
+                      onClick={() => setSortOrder("High to Low")}
                     >
                       High to Low
                     </a>
@@ -146,43 +176,32 @@ const ExpenseList = ({ expenseList, onEdit, onDelete }) => {
                   role="menu"
                   aria-orientation="vertical"
                   aria-labelledby="filter-button"
-                  tabindex="-1"
+                  tabIndex="-1"
                   id="filter-dropdown"
                 >
                   <div className="py-1" role="none">
-                    <label className="inline-flex items-center px-4 py-2 text-sm text-gray-700">
-                      <input
-                        type="checkbox"
-                        className="form-checkbox h-4 w-4 rounded-md text-gray-600"
-                        id="filter-option-1"
-                      />
-                      <span className="ml-2">Salary</span>
-                    </label>
-                    <label className="inline-flex items-center px-4 py-2 text-sm text-gray-700">
-                      <input
-                        type="checkbox"
-                        className="form-checkbox h-4 w-4 rounded-md text-gray-600"
-                        id="filter-option-2"
-                      />
-                      <span className="ml-2">Outsourcing</span>
-                    </label>
-                    <label className="inline-flex items-center px-4 py-2 text-sm text-gray-700">
-                      <input
-                        type="checkbox"
-                        className="form-checkbox h-4 w-4 rounded-md text-gray-600"
-                        id="filter-option-3"
-                      />
-                      <span className="ml-2">Bond</span>
-                    </label>
-
-                    <label className="inline-flex items-center px-4 py-2 text-sm text-gray-700">
-                      <input
-                        type="checkbox"
-                        className="form-checkbox h-4 w-4 rounded-md text-gray-600"
-                        id="filter-option-3"
-                      />
-                      <span className="ml-2">Dividend</span>
-                    </label>
+                    {[
+                      "Education",
+                      "Food",
+                      "Bill",
+                      "Health",
+                      "Tax",
+                      "Insurance",
+                    ].map((category) => (
+                      <label
+                        key={category}
+                        className="inline-flex items-center px-4 py-2 text-sm text-gray-700"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={filterCategory.includes(category)}
+                          onChange={() => toggleCategoryFilter(category)}
+                          className="form-checkbox h-4 w-4 rounded-md text-gray-600"
+                          id="filter-option-1"
+                        />
+                        <span className="ml-2">{category}</span>
+                      </label>
+                    ))}
                   </div>
                 </div>
               )}
@@ -191,7 +210,7 @@ const ExpenseList = ({ expenseList, onEdit, onDelete }) => {
         </div>
 
         <div className="p-4 divide-y">
-          {expenseList.map((expense) => (
+          {filterExpenseList.map((expense) => (
             <div
               key={expense.id}
               className="flex justify-between items-center py-2 relative group cursor-pointer"
@@ -212,7 +231,7 @@ const ExpenseList = ({ expenseList, onEdit, onDelete }) => {
                     className="hover:text-teal-600"
                     role="button"
                     title="Edit Button"
-                    onClick={()=> onEdit(expense)}
+                    onClick={() => onEdit(expense)}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -234,7 +253,7 @@ const ExpenseList = ({ expenseList, onEdit, onDelete }) => {
                     className="hover:text-red-600"
                     role="button"
                     title="Delete"
-                    onClick={()=> onDelete(expense.id)}
+                    onClick={() => onDelete(expense.id)}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
